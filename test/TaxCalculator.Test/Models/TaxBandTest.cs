@@ -1,11 +1,10 @@
 using System;
 using Xunit;
-using Moq;
 using FluentAssertions;
 using TaxCalculator.Models;
 using System.Collections.Generic;
 
-namespace TaxCalculator.Tests
+namespace TaxCalculator.Tests.Models
 {
     public class TaxBandTest
     {

@@ -4,7 +4,8 @@ namespace TaxCalculator.Models
 {
     public class TaxBand : IComparable
     {
-        public TaxBand(decimal rate, string description, decimal? upperBound = null)
+        protected TaxBand(){}
+        public TaxBand(decimal rate, string description, decimal? upperBound = null):base()
         {
             if (rate < 0)
             {
@@ -25,9 +26,9 @@ namespace TaxCalculator.Models
             Description = description;
             UpperBound = upperBound;
         }
-        public decimal? UpperBound { get; private set; }
-        public decimal Rate { get; private set; }
-        public string Description { get; private set; }
+        public virtual decimal? UpperBound { get; private set; }
+        public virtual decimal Rate { get; private set; }
+        public virtual string Description { get; private set; }
 
         /// <summary>
         /// GetTax of the income/amount of this taxBand
@@ -35,7 +36,7 @@ namespace TaxCalculator.Models
         /// </summary>
         /// <param name="lowerBound">The lowerBound of the previous band, should be 0 for the head band.</param>
         /// <param name="amount">The income amount .</param>
-        public decimal GetTax(decimal lowerBound, decimal amount)
+        public virtual decimal GetTax(decimal lowerBound, decimal amount)
         {
             if (amount < 0 || lowerBound < 0)
             {
