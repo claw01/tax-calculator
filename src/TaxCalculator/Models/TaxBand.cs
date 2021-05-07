@@ -1,11 +1,14 @@
 using System;
+using MongoDB.Bson;
+
 
 namespace TaxCalculator.Models
 {
+
     public class TaxBand : IComparable
     {
-        protected TaxBand(){}
-        public TaxBand(decimal rate, string description, decimal? upperBound = null):base()
+        protected TaxBand() { }
+        public static TaxBand Create(decimal rate, string description, decimal? upperBound = null)
         {
             if (rate < 0)
             {
@@ -22,9 +25,12 @@ namespace TaxCalculator.Models
                 throw new ArgumentException("description must not be null or empty");
             }
 
-            Rate = rate;
-            Description = description;
-            UpperBound = upperBound;
+            return new TaxBand
+            {
+                Rate = rate,
+                Description = description,
+                UpperBound = upperBound,
+            };
         }
         public virtual decimal? UpperBound { get; private set; }
         public virtual decimal Rate { get; private set; }

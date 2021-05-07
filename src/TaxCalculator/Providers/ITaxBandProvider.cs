@@ -1,7 +1,7 @@
-using TaxCalculator.Models;
 using System.Collections.Generic;
+using TaxCalculator.Models;
 
-namespace TaxCalculator.Repositories
+namespace TaxCalculator.Providers
 {
     public interface ITaxBandProvider
     {

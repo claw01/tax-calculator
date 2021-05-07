@@ -11,9 +11,9 @@ namespace TaxCalculator.Utilities.Tests
         {
             get
             {
-                var band1 = new TaxBand(20, "band1", 100);
-                var band2 = new TaxBand(20, "band2", 200);
-                var band3 = new TaxBand(20, "band3");
+                var band1 = TaxBand.Create(20, "band1", 100);
+                var band2 = TaxBand.Create(20, "band2", 200);
+                var band3 = TaxBand.Create(20, "band3");
 
                 var expectedResult = new List<TaxBand> { band1, band2, band3 };
 
@@ -47,11 +47,11 @@ namespace TaxCalculator.Utilities.Tests
         {
             get
             {
-                var band1 = new TaxBand(20, "band1", 100);
-                var band2 = new TaxBand(20, "band2", 200);
-                var band3 = new TaxBand(20, "band3");
-                var band2Duplicated = new TaxBand(20, "band2", 200);
-                var band3Duplicated = new TaxBand(20, "band3");
+                var band1 = TaxBand.Create(20, "band1", 100);
+                var band2 = TaxBand.Create(20, "band2", 200);
+                var band3 = TaxBand.Create(20, "band3");
+                var band2Duplicated = TaxBand.Create(20, "band2", 200);
+                var band3Duplicated = TaxBand.Create(20, "band3");
 
                 return new List<object[]>
                 {
@@ -77,10 +77,10 @@ namespace TaxCalculator.Utilities.Tests
         {
             get
             {
-                var band1 = new TaxBand(20, "band1", 100);
-                var band2 = new TaxBand(20, "band2", 200);
-                var band3 = new TaxBand(20, "band3", 300);
-                var band4 = new TaxBand(20, "band4");
+                var band1 = TaxBand.Create(20, "band1", 100);
+                var band2 = TaxBand.Create(20, "band2", 200);
+                var band3 = TaxBand.Create(20, "band3", 300);
+                var band4 = TaxBand.Create(20, "band4");
 
                 return new List<object[]>
                 {

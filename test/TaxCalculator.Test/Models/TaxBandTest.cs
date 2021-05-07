@@ -13,7 +13,7 @@ namespace TaxCalculator.Tests.Models
         [InlineData(10000)]
         public void GetTax_WhenAmountLessThanOrEqualToUpperBound_ReturnsProductOfRateAndDifferenceOfAmountAndLowerBound(decimal amount)
         {
-            var taxBand = new TaxBand(20, "band1", 10000);
+            var taxBand = TaxBand.Create(20, "band1", 10000);
             var tax = taxBand.GetTax(2000, amount);
             tax.Should().Be((amount - 2000) * (20 / 100m));
         }
@@ -21,7 +21,7 @@ namespace TaxCalculator.Tests.Models
         [Fact]
         public void GetTax_WhenAmountLargerThanUpperBound_ReturnsProductOfRateAndDifferenceOfUpperBoundAndLowerBound()
         {
-            var taxBand = new TaxBand(20, "band1", 10000);
+            var taxBand = TaxBand.Create(20, "band1", 10000);
             var tax = taxBand.GetTax(2000, 12000);
             tax.Should().Be((10000m - 2000) * (20 / 100m));
         }
@@ -31,7 +31,7 @@ namespace TaxCalculator.Tests.Models
         [InlineData(8000, 8000)]
         public void GetTax_WhenLowerBoundLargerThanAmount_ReturnZero(decimal lowerBound, decimal amount)
         {
-            var taxBand = new TaxBand(20, "band1", 10000);
+            var taxBand = TaxBand.Create(20, "band1", 10000);
             var tax = taxBand.GetTax(lowerBound, amount);
             tax.Should().Be(0);
         }
@@ -39,7 +39,7 @@ namespace TaxCalculator.Tests.Models
         [Fact]
         public void GetTax_WhenUpperBoundIsNull_ReturnsProductOfRateAndDifferenceOfAmountAndLowerBound()
         {
-            var taxBand = new TaxBand(20, "band1");
+            var taxBand = TaxBand.Create(20, "band1");
             var tax = taxBand.GetTax(2000m, 10000m);
             tax.Should().Be((10000m - 2000) * (20 / 100m));
         }
@@ -47,14 +47,14 @@ namespace TaxCalculator.Tests.Models
         [Fact]
         public void GetTax_WhenAmountLessThanZero_ThrowError()
         {
-            var taxBand = new TaxBand(20, "band1");
+            var taxBand = TaxBand.Create(20, "band1");
             taxBand.Invoking(x => x.GetTax(0, -1m)).Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
         public void GetTax_WhenBothAmountAndLowerBoundAreZero_ReturnZero()
         {
-            var taxBand = new TaxBand(20, "band1");
+            var taxBand = TaxBand.Create(20, "band1");
             var tax = taxBand.GetTax(0, 0);
             tax.Should().Be(0);
         }
@@ -62,7 +62,7 @@ namespace TaxCalculator.Tests.Models
         [Fact]
         public void GetTax_WhenLowerBoundLessThanZero_ThrowError()
         {
-            var taxBand = new TaxBand(20, "band1");
+            var taxBand = TaxBand.Create(20, "band1");
             taxBand.Invoking(x => x.GetTax(-1m, 1m)).Should().Throw<InvalidOperationException>();
         }
 
@@ -82,8 +82,8 @@ namespace TaxCalculator.Tests.Models
         [MemberData(nameof(CompareTo_Data))]
         public void CompareTo_Test(decimal? upperBound1, decimal? upperBound2, int expectedResult)
         {
-            var taxBand1 = new TaxBand(20, "band1", upperBound1);
-            var taxBand2 = new TaxBand(20, "band2", upperBound2);
+            var taxBand1 = TaxBand.Create(20, "band1", upperBound1);
+            var taxBand2 = TaxBand.Create(20, "band2", upperBound2);
 
             var result = taxBand1.CompareTo(taxBand2);
 

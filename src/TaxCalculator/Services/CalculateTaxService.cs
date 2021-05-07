@@ -1,11 +1,11 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
-using TaxCalculator.Repositories;
+using TaxCalculator.Providers;
 using TaxCalculator.Utilities;
 using TaxCalculator.Dtos;
+using TaxCalculator.Models;
 
-namespace TaxCalculator.Models
+namespace TaxCalculator.Services
 {
     public class CalculateTaxService : ICalculateTaxService
     {
@@ -33,36 +33,26 @@ namespace TaxCalculator.Models
             TaxBands = taxBandHelper.Sort(taxBands);
         }
 
-        public decimal GetTotalTax(decimal amount)
+        public (decimal,List<TaxDetailDto>) GetTax(decimal amount)
         {
             var lowerBound = 0m;
             var total = 0m;
-
-            foreach (var taxBand in TaxBands)
-            {
-                total += taxBand.GetTax(lowerBound, amount);
-                lowerBound = taxBand.UpperBound.HasValue ? taxBand.UpperBound.Value : 0;
-            }
-
-            return total;
-        }
-
-        public List<TaxDetailDto> GetTaxDetails(decimal amount)
-        {
-            var lowerBound = 0m;
             var details = new List<TaxDetailDto>();
 
             foreach (var taxBand in TaxBands)
             {
-               details.Add(TaxDetailDto.Create(lowerBound,
+                total += taxBand.GetTax(lowerBound, amount);
+                details.Add(TaxDetailDto.Create(lowerBound,
                     taxBand.UpperBound,
                     taxBand.Rate,
                     taxBand.Description,
                     taxBand.GetTax(lowerBound, amount)));
-
                 lowerBound = taxBand.UpperBound.HasValue ? taxBand.UpperBound.Value : 0;
             }
-            return details;
+
+            return (total, details);
         }
+
+
     }
 }

@@ -4,7 +4,8 @@ using Xunit;
 using Moq;
 using FluentAssertions;
 using TaxCalculator.Models;
-using TaxCalculator.Repositories;
+using TaxCalculator.Services;
+using TaxCalculator.Providers;
 using TaxCalculator.Utilities;
 using System.Collections.Generic;
 
@@ -105,35 +106,12 @@ namespace TaxCalculator.Tests.Services
             taxBandHelperMock.Setup(x => x.Sort(It.Is<List<TaxBand>>(x => x == taxBandsMock))).Returns(sortedTaxBandsMock);
 
             var service = new CalculateTaxService(taxBandProviderMock.Object, taxBandHelperMock.Object);
-            service.GetTotalTax(50000);
+            service.GetTax(50000);
 
             band1Mock.Verify(x => x.GetTax(0, 50000));
             band2Mock.Verify(x => x.GetTax(100m, 50000));
             band3Mock.Verify(x => x.GetTax(200m, 50000));
             band4Mock.Verify(x => x.GetTax(300m, 50000));
-        }
-
-        [Fact]
-        public void GetTotalTax_ReturnSumOfAllTaxBandGetTaxResult()
-        {
-            (var taxBandProviderMock, var taxBandHelperMock, var taxBandsMock) = GetMocks();
-
-            var band1Mock = GetTaxBandMock(100m, 20, "band1", 4);
-            var band2Mock = GetTaxBandMock(200m, 20, "band2", 30);
-            var band3Mock = GetTaxBandMock(300m, 30, "band3", 200);
-            var band4Mock = GetTaxBandMock(null, 40, "band4", 1000);
-
-            var sortedTaxBandsMock = new List<TaxBand>() { band1Mock.Object, band2Mock.Object, band3Mock.Object, band4Mock.Object };
-
-            taxBandProviderMock.Setup(x => x.GetAll()).Returns(taxBandsMock);
-            taxBandHelperMock.Setup(x => x.AnyDuplicatedUpperBound(It.IsAny<List<TaxBand>>())).Returns(false);
-            taxBandHelperMock.Setup(x => x.AnyTailBand(It.Is<List<TaxBand>>(x => x == taxBandsMock))).Returns(true);
-            taxBandHelperMock.Setup(x => x.Sort(It.Is<List<TaxBand>>(x => x == taxBandsMock))).Returns(sortedTaxBandsMock);
-
-            var service = new CalculateTaxService(taxBandProviderMock.Object, taxBandHelperMock.Object);
-            var tax = service.GetTotalTax(50000);
-
-            tax.Should().Be(1234);
         }
 
         [Fact]
@@ -154,41 +132,43 @@ namespace TaxCalculator.Tests.Services
             taxBandHelperMock.Setup(x => x.Sort(It.Is<List<TaxBand>>(x => x == taxBandsMock))).Returns(sortedTaxBandsMock);
 
             var service = new CalculateTaxService(taxBandProviderMock.Object, taxBandHelperMock.Object);
-            var taxs = service.GetTaxDetails(50000);
+            (var total, var details) = service.GetTax(50000);
 
-            taxs.Should().HaveCount(4);
-            taxs[0].Description.Should().Be("band1");
-            taxs[0].Rate.Should().Be(20);
-            taxs[0].Tax.Should().Be(4);
+            total.Should().Be(1234);
+            details.Should().HaveCount(4);
+            details[0].Description.Should().Be("band1");
+            details[0].Rate.Should().Be(20);
+            details[0].Tax.Should().Be("4.00");
 
-            taxs[1].Description.Should().Be("band2");
-            taxs[1].Rate.Should().Be(20);
-            taxs[1].Tax.Should().Be(30);
+            details[1].Description.Should().Be("band2");
+            details[1].Rate.Should().Be(20);
+            details[1].Tax.Should().Be("30.00");
 
-            taxs[2].Description.Should().Be("band3");
-            taxs[2].Rate.Should().Be(30);
-            taxs[2].Tax.Should().Be(200);
+            details[2].Description.Should().Be("band3");
+            details[2].Rate.Should().Be(30);
+            details[2].Tax.Should().Be("200.00");
 
-            taxs[3].Description.Should().Be("band4");
-            taxs[3].Rate.Should().Be(40);
-            taxs[3].Tax.Should().Be(1000);
+            details[3].Description.Should().Be("band4");
+            details[3].Rate.Should().Be(40);
+            details[3].Tax.Should().Be("1000.00");
         }
 
         [Fact]
-        public void IntegrationTest_WithMockProvider(){ 
-           (var taxBandProviderMock, _, _) = GetMocks();
+        public void IntegrationTest_WithMockProvider()
+        {
+            (var taxBandProviderMock, _, _) = GetMocks();
 
-            var band1 = new TaxBand(0, "band1", 12_500m);
-            var band2 = new TaxBand(20, "band2", 50_000m);
-            var band3 = new TaxBand(40, "band3", 150_000m);
-            var band4 = new TaxBand(45, "band4");
+            var band1 = TaxBand.Create(0, "band1", 12_500m);
+            var band2 = TaxBand.Create(20, "band2", 50_000m);
+            var band3 = TaxBand.Create(40, "band3", 150_000m);
+            var band4 = TaxBand.Create(45, "band4");
 
-            var taxBands = new List<TaxBand>() { band1,band2,band3,band4};
+            var taxBands = new List<TaxBand>() { band1, band2, band3, band4 };
 
             taxBandProviderMock.Setup(x => x.GetAll()).Returns(taxBands);
 
             var service = new CalculateTaxService(taxBandProviderMock.Object, new TaxBandHelper());
-            var tax = service.GetTotalTax(52_000m);
+            (var tax, _) = service.GetTax(52_000m);
 
             tax.Should().Be(8_300m);
         }

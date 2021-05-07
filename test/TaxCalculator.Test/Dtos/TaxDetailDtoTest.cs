@@ -4,7 +4,7 @@ using Xunit;
 using Moq;
 using FluentAssertions;
 using TaxCalculator.Dtos;
-using TaxCalculator.Repositories;
+using TaxCalculator.Providers;
 using TaxCalculator.Utilities;
 using System.Collections.Generic;
 
@@ -19,7 +19,7 @@ namespace TaxCalculator.Tests.Services
 
             detail.Description.Should().Be("band1");
             detail.Range.Should().Be("Over 10000.00 and less than or equal to 20000.00");
-            detail.Tax.Should().Be(2000);
+            detail.Tax.Should().Be("2000.00");
             detail.Rate.Should().Be(20);
         }
 
@@ -30,7 +30,7 @@ namespace TaxCalculator.Tests.Services
 
             detail.Description.Should().Be("band1");
             detail.Range.Should().Be("Over 10000.00");
-            detail.Tax.Should().Be(2000);
+            detail.Tax.Should().Be("2000.00");
             detail.Rate.Should().Be(20);
         }
     }

@@ -8,6 +8,15 @@ Globals:
   Function:
     Timeout: 10
 
+
+Parameters:
+  MONGO_DB_NAME: 
+    Type: String
+    Description: The name of mongo db
+  MONGO_DB_CONNECTION_STR:
+    Type: String
+    Description: Connection string to mongo db
+
 Resources:
   TaxCalculatorFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -18,12 +27,13 @@ Resources:
       MemorySize: 256
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          PARAM1: VALUE
+          MONGO_DB_CONNECTION_STR: !Ref MONGO_DB_CONNECTION_STR
+          MONGO_DB_NAME: !Ref MONGO_DB_NAME
       Events:
         TaxCalculator:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /tax
+            Path: /tax/{amount}
             Method: get
 
 Outputs:
