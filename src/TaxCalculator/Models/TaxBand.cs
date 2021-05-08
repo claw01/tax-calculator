@@ -4,7 +4,6 @@ using MongoDB.Bson;
 
 namespace TaxCalculator.Models
 {
-
     public class TaxBand : IComparable
     {
         protected TaxBand() { }

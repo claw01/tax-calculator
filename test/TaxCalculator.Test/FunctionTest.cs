@@ -9,10 +9,13 @@ namespace TaxCalculator.Tests
     public class FunctionTest
     {
         Function _function = new Function();
-        private APIGatewayProxyRequest CreateRequest(string amount, string detail = null)
+        private APIGatewayProxyRequest CreateRequest(string amount = null, string detail = null)
         {
             var request = new APIGatewayProxyRequest();
-            request.PathParameters = new Dictionary<string, string>() { { "amount", amount } };
+            if (amount != null)
+            {
+                request.PathParameters = new Dictionary<string, string>() { { "amount", amount } };
+            }
 
             if (detail != null)
             {
@@ -38,8 +41,24 @@ namespace TaxCalculator.Tests
             var context = new TestLambdaContext();
             var body = "{\n  \"totalTax\": \"8300.00\"\n}";
 
-            var expectedResponse = CreateExpectedResponse(body,200);
-  
+            var expectedResponse = CreateExpectedResponse(body, 200);
+
+            var response = _function.FunctionHandler(request, context);
+
+            response.Body.Should().Be(expectedResponse.Body);
+            response.Headers.Should().Equal(expectedResponse.Headers);
+            response.StatusCode.Should().Be(expectedResponse.StatusCode);
+        }
+
+        [Fact]
+        public void GetTotal_AmountNull_Return400()
+        {
+            var request = CreateRequest();
+            var context = new TestLambdaContext();
+            var body = "{\n  \"message\": \"Please provide amount\"\n}";
+
+            var expectedResponse = CreateExpectedResponse(body, 400);
+
             var response = _function.FunctionHandler(request, context);
 
             response.Body.Should().Be(expectedResponse.Body);
@@ -54,7 +73,7 @@ namespace TaxCalculator.Tests
             var context = new TestLambdaContext();
             var body = "{\n  \"message\": \"Amount must be a valid number\"\n}";
 
-             var expectedResponse = CreateExpectedResponse(body,400);
+            var expectedResponse = CreateExpectedResponse(body, 400);
 
             var response = _function.FunctionHandler(request, context);
 
@@ -97,7 +116,7 @@ namespace TaxCalculator.Tests
     }
   ]
 }";
-             var expectedResponse = CreateExpectedResponse(body,200);
+            var expectedResponse = CreateExpectedResponse(body, 200);
 
             var response = _function.FunctionHandler(request, context);
 

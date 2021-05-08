@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using TaxCalculator.Models;
 using System.Linq;
-
+using TaxCalculator.Models;
 namespace TaxCalculator.Utilities
 {
-
     public class TaxBandHelper : ITaxBandHelper
     {
         public List<TaxBand> Sort(List<TaxBand> taxBands)

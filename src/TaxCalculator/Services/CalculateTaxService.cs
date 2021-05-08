@@ -12,7 +12,6 @@ namespace TaxCalculator.Services
         private readonly ITaxBandProvider _taxBandProvider;
         private readonly ITaxBandHelper _taxBandHelper;
         public IReadOnlyList<TaxBand> TaxBands { get; private set; }
-
         public CalculateTaxService(ITaxBandProvider taxBandProvider, ITaxBandHelper taxBandHelper)
         {
             _taxBandProvider = taxBandProvider;
@@ -33,7 +32,7 @@ namespace TaxCalculator.Services
             TaxBands = taxBandHelper.Sort(taxBands);
         }
 
-        public (decimal,List<TaxDetailDto>) GetTax(decimal amount)
+        public (decimal, List<TaxDetailDto>) GetTax(decimal amount)
         {
             var lowerBound = 0m;
             var total = 0m;

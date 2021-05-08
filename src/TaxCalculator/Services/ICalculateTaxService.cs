@@ -7,7 +7,7 @@ namespace TaxCalculator.Services
         /// <summary>
         /// This should return the total tax combined of every Tax Band
         ///</summary>
-        (decimal,List<TaxDetailDto>) GetTax(decimal amount);
+        (decimal, List<TaxDetailDto>) GetTax(decimal amount);
 
     }
 }

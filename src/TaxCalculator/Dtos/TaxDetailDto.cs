@@ -8,7 +8,6 @@ namespace TaxCalculator.Dtos
         public decimal Rate { get; private set; }
         public string Description { get; private set; }
         public string Tax { get; private set; }
-
         public static TaxDetailDto Create(decimal lowerBound, decimal? upperBound, decimal rate, string description, decimal tax)
         {
             var sb = new StringBuilder();

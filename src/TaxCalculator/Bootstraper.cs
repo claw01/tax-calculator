@@ -7,18 +7,18 @@ using Newtonsoft.Json;
 
 namespace TaxCalculator
 {
-
     public static class Bootstraper
     {
         public static ServiceProvider Setup()
         {
-            JsonConvert.DefaultSettings = () => { 
+            JsonConvert.DefaultSettings = () =>
+            {
                 var settings = new JsonSerializerSettings();
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.Formatting = Formatting.Indented;
                 return settings;
-                };
-            
+            };
+
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IConfiguration>((s) => LoadConfiguration());
             serviceCollection.AddSingleton<ITaxBandHelper, TaxBandHelper>();

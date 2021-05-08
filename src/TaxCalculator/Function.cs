@@ -12,7 +12,6 @@ using TaxCalculator.Utilities;
 
 namespace TaxCalculator
 {
-
     public class Function
     {
         private const string Path_Amount_Key = "amount";
@@ -67,7 +66,12 @@ namespace TaxCalculator
         }
         private decimal GetAmount(APIGatewayProxyRequest apigProxyEvent)
         {
-            if (!Decimal.TryParse(apigProxyEvent.PathParameters["amount"], out decimal amountValue))
+            if (apigProxyEvent.PathParameters == null || !apigProxyEvent.PathParameters.ContainsKey(Path_Amount_Key))
+            {
+                throw new ArgumentException("Please provide amount");
+            }
+
+            if (!Decimal.TryParse(apigProxyEvent.PathParameters[Path_Amount_Key], out decimal amountValue))
             {
                 throw new ArgumentException("Amount must be a valid number");
             }
