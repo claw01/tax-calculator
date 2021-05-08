@@ -46,9 +46,12 @@ sam build && sam local start-api
 
 # To run Tests
 
-1. Navigate to test/TaxCalculator.Test 
-2. The tests include both integration and unit tests, therefore you need to setup the environment variables in prerequisite to run all tests properly.
-2. Execute the following command
+1. The tests include both integration and unit tests, therefore you need to setup the environment variables in prerequisite and have the mongo db spin up. If mongo db is not yet running. Navigate to middleware folder, execute the following command to spin it up
+```console
+docker compose up
+```
+2. Navigate to test/TaxCalculator.Test 
+3. Execute the following command
 ```console
 dotnet test
 ```
